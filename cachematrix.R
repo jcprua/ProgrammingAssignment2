@@ -1,15 +1,53 @@
-## Put comments here that give an overall description of what your
-## functions do
+# R-Programming Assignment 2
 
-## Write a short comment describing this function
+# These 2 functions allow the inversion of a matrix, and to store it and retrieve 
+# it later, so that it doesn't have to be recalculated again; it's done by saving
+# the data in the parent environment;
+
+# makeCacheMatrix function defines three sub-functions, in order to 
+# allow saving an inverted matrix so that it isn't necessary to invert 
+# the same matrix twice; if it is already inverted and saved, it is 
+# quickly retrieved without additional computations needed
 
 makeCacheMatrix <- function(x = matrix()) {
 
+  test_sav_mx <- function(x) {
+  # tests if matrix is already inverted and saved:
+
+    message("Inside test_sav_mx function...")
+    if (exists("mx_orig")) 
+      if (!is.null(mx_orig) & (x == mx_orig))
+        return(TRUE)
+      else
+        return(FALSE)
+  } 
+
+  save_inv_mx <- function(x) {
+  # saves original and inverted matrices in parent environment:
+
+    message("Inside save_inv_mx function...")
+    mx_orig <<- x
+    mx_inv <<- cacheSolve(x)
+    message("Matrix inverted and cached !")
+  }
+
+  get_inv_mx <- function() {
+  # retrieves inverted matrix, saved in parent environment:
+
+    message("Inside get_inv_mx function...")
+    if (exists("mx_inv") & !is.null(mx_inv)) {
+      message("Returning the cached matrix !")
+      return(mx_inv) 
+    }
+    else return(NULL)
+  }
+
+  return(list(test=test_sav_mx, save=save_inv_mx, get=get_inv_mx))
 }
 
-
-## Write a short comment describing this function
+# cacheSolve function receives a matrix and returns the correspondent
+# inverted one (which is acheived by calling the solve() function)
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+    return(solve(x)) 
 }
